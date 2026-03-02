@@ -59,7 +59,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001
 - `AGENT_DEEPSEEK_MODEL` — модель (например, `deepseek-chat`).
 - `AGENT_CART_API_URL` — URL Cart API.
 - `AGENT_MCP_MOCK_ENABLED` — режим мок-каталога MCP (`true/false`).
-- `AGENT_MCP_SEARCH_URL` — URL поиска товаров MCP провайдера (например, endpoint ВкусВилл MCP proxy/search).
+- `AGENT_MCP_SEARCH_URL` — URL MCP интеграции: либо HTTP proxy/search endpoint, либо прямой MCP endpoint (`https://mcp001.vkusvill.ru/mcp`).
 - `AGENT_MCP_API_KEY` — API ключ MCP провайдера (если требуется).
 - `AGENT_MCP_TIMEOUT_SECONDS` — таймаут запроса в MCP в секундах.
 - `CART_DATABASE_URL` — строка подключения PostgreSQL.
@@ -70,7 +70,9 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001
 
 ### Подключение реального MCP (ВкусВилл)
 1. Отключите mock: `AGENT_MCP_MOCK_ENABLED=false`.
-2. Укажите endpoint поиска из документации провайдера в `AGENT_MCP_SEARCH_URL`.
+2. Укажите `AGENT_MCP_SEARCH_URL`:
+   - для прямого MCP ВкусВилл: `https://mcp001.vkusvill.ru/mcp` (используется тул `vkusvill_products_search` через MCP SDK),
+   - либо proxy/search endpoint, если у вас есть HTTP-прокси поверх MCP.
 3. Если endpoint требует токен — задайте `AGENT_MCP_API_KEY`.
 4. Проверьте доступность endpoint перед запуском Agent API.
 
