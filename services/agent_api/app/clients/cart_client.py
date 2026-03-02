@@ -21,13 +21,21 @@ class CartApiClient:
             resp.raise_for_status()
             return resp.json()
 
-    async def get_latest_cart(self, user_id: str) -> dict:
+    async def get_latest_cart(self, user_id: str) -> dict | None:
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.get(
                 f"{self.base_url}/api/v1/carts/by-user/{user_id}/latest"
             )
+            if resp.status_code == 404:
+                return None
             resp.raise_for_status()
             return resp.json()
+
+    async def ensure_cart(self, user_id: str) -> int:
+        latest = await self.get_latest_cart(user_id)
+        if latest and "cart_id" in latest:
+            return int(latest["cart_id"])
+        return await self.create_cart(user_id)
 
     async def clear_cart(self, cart_id: int) -> dict:
         async with httpx.AsyncClient(timeout=10) as client:
