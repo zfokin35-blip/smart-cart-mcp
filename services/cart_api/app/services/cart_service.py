@@ -36,3 +36,25 @@ def add_item(db: Session, cart_id: int, item_in: CartItemCreate) -> models.Cart:
     db.commit()
     db.refresh(cart)
     return cart
+
+
+def get_latest_cart_by_user(db: Session, user_external_id: str) -> models.Cart | None:
+    return (
+        db.query(models.Cart)
+        .join(models.Session, models.Cart.session_id == models.Session.id)
+        .join(models.User, models.Session.user_id == models.User.id)
+        .filter(models.User.external_id == user_external_id)
+        .order_by(models.Cart.id.desc())
+        .first()
+    )
+
+
+def clear_cart(db: Session, cart_id: int) -> models.Cart | None:
+    cart = db.query(models.Cart).filter_by(id=cart_id).first()
+    if not cart:
+        return None
+    cart.items.clear()
+    cart.total_amount = 0
+    db.commit()
+    db.refresh(cart)
+    return cart
