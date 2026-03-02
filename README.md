@@ -50,10 +50,15 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001
 (для Agent API аналогично, с `PYTHONPATH=$(pwd)/services/agent_api`)
 
 ### Переменные окружения (.env)
+1. Скопируйте шаблон: `cp .env.example .env`
+2. Заполните секреты (`AGENT_DEEPSEEK_API_KEY`, `BOT_TOKEN`) и при необходимости измените URL'ы.
+
+Поддерживаемые переменные:
 - `AGENT_DEEPSEEK_API_KEY` — ключ DeepSeek.
 - `AGENT_DEEPSEEK_BASE_URL` — базовый URL DeepSeek (`https://api.deepseek.com`).
 - `AGENT_DEEPSEEK_MODEL` — модель (например, `deepseek-chat`).
 - `AGENT_CART_API_URL` — URL Cart API.
+- `AGENT_MCP_MOCK_ENABLED` — режим мок-каталога MCP (`true/false`).
 - `CART_DATABASE_URL` — строка подключения PostgreSQL.
 - `CART_REDIS_URL` — URL Redis.
 - `BOT_TOKEN` — Telegram bot token.
@@ -72,6 +77,14 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001
 ```bash
 pytest -q
 ```
+
+Проверки качества кода:
+```bash
+black --check .
+python -m flake8
+```
+
+> На текущий момент в репозитории есть unit-тесты для ключевого happy-path в Agent API и для пересчета суммы в Cart API. Интеграционные/e2e тесты и проверки Telegram-потока пока не добавлены.
 
 ## 6) Контакты и поддержка
 - **Рыхлинский К.А.** — Agent API, Telegram Bot, LLM/MCP интеграция.
