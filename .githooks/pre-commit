@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+black --check .
+flake8 .
+pytest -q
