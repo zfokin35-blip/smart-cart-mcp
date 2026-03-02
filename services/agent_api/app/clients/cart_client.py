@@ -20,3 +20,17 @@ class CartApiClient:
             )
             resp.raise_for_status()
             return resp.json()
+
+    async def get_latest_cart(self, user_id: str) -> dict:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(
+                f"{self.base_url}/api/v1/carts/by-user/{user_id}/latest"
+            )
+            resp.raise_for_status()
+            return resp.json()
+
+    async def clear_cart(self, cart_id: int) -> dict:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.delete(f"{self.base_url}/api/v1/carts/{cart_id}/items")
+            resp.raise_for_status()
+            return resp.json()
